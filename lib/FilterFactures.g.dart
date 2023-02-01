@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'ListFactures.dart';
+part of 'FilterFactures.dart';
 
 // **************************************************************************
 // RiverpodGenerator
@@ -29,19 +29,20 @@ class _SystemHash {
   }
 }
 
-String _$ListFacturesHash() => r'17797db47d5d5270ec0fada15020cde3f240ca96';
+String _$FilterFacturesHash() => r'd7690d32424f4e203ebb46f35b799d9ed14094ca';
 
-/// See also [ListFactures].
-final listFacturesProvider =
-    AutoDisposeNotifierProvider<ListFactures, Iterable<Facture>>(
-  ListFactures.new,
-  name: r'listFacturesProvider',
-  debugGetCreateSourceHash:
-      const bool.fromEnvironment('dart.vm.product') ? null : _$ListFacturesHash,
+/// See also [FilterFactures].
+final filterFacturesProvider =
+    AutoDisposeNotifierProvider<FilterFactures, Iterable<Facture>>(
+  FilterFactures.new,
+  name: r'filterFacturesProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$FilterFacturesHash,
 );
-typedef ListFacturesRef = AutoDisposeNotifierProviderRef<Iterable<Facture>>;
+typedef FilterFacturesRef = AutoDisposeNotifierProviderRef<Iterable<Facture>>;
 
-abstract class _$ListFactures extends AutoDisposeNotifier<Iterable<Facture>> {
+abstract class _$FilterFactures extends AutoDisposeNotifier<Iterable<Facture>> {
   @override
   Iterable<Facture> build();
 }

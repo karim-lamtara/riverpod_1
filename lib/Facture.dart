@@ -9,10 +9,9 @@ class Facture with _$Facture {
     @Default(0) int prix,
   }) = _Facture;
 
-  static int lastIndexUsed = 0;
-  static Facture factureFactory(int idx, String nom, int prix) {
-    Facture facture = Facture(id: 'FCT-$idx', nomClient: nom, prix: prix);
-    lastIndexUsed++;
-    return facture;
-  }
+  // static Facture factureFactory(int idx, String nom, int prix) {
+  //   Facture facture = Facture(id: 'FCT-$idx', nomClient: nom, prix: prix);
+  //   lastIndexUsed++;
+  //   return facture;
+  // }
 }

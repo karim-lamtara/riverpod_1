@@ -1,8 +1,11 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_1/ListFactures.dart';
 
 import 'Facture.dart';
+import 'FilterFactures.dart';
 import 'Util.dart';
 
 void main() {
@@ -56,32 +59,45 @@ class MyHomePage extends ConsumerWidget {
   @override
   build(context, ref) {
     final theme = Theme.of(context);
-    Iterable<Facture> factures = ref.watch(listFacturesProvider);
+
+    final filterWatch = ref.watch(filterFacturesProvider);
     final facturesRead = ref.read(listFacturesProvider.notifier);
+    final filterRead = ref.read(filterFacturesProvider.notifier);
     return Scaffold(
         appBar: AppBar(
           centerTitle: true,
           title: const Text('Facture exo SCUB'),
           backgroundColor: theme.colorScheme.primary,
         ),
-        body:
-            //Padding(
-            //     padding: const EdgeInsets.all(0),
-            // child:
-            Center(
+        body: Center(
           child: SizedBox(
-              height: 500,
+              height: 400,
               child: ListView(children: [
-                FloatingActionButton(
-                  heroTag: "btn1",
-                  onPressed: () => facturesRead.add(Facture.factureFactory(
-                      facturesRead.nextId(),
-                      Util.randomClient(),
-                      Util.randomPrix())),
-                  child: const Icon(Icons.add),
-                ),
+                Row(children: [
+                  FloatingActionButton(
+                    heroTag: "btn1",
+                    onPressed: () => facturesRead.add(
+                        facturesRead.factureFactory(facturesRead.nextId(),
+                            Util.randomClient(), Util.randomPrix())),
+                    child: const Icon(Icons.add),
+                  ),
+                  const SizedBox(
+                    width: 100,
+                  ),
+                  SizedBox(
+                    width: 20.0,
+                    child: TextField(
+                      maxLines: 1,
+                      maxLength: 5,
+                      keyboardType: TextInputType.number,
+                      onChanged: (String value) {
+                        filterRead.refreshMinimumPrice(value);
+                      },
+                    ),
+                  ),
+                ]),
                 Column(
-                  children: factures
+                  children: filterWatch
                       .map((e) =>
                           FactureCard(facture: e, facturesRead: facturesRead))
                       .toList(),
