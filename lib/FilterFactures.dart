@@ -9,15 +9,18 @@ part 'FilterFactures.g.dart';
 class FilterFactures extends _$FilterFactures {
   final sortedFactures = const Iterable<Facture>.empty();
   @override
-  Iterable<Facture> build() => sortedFactures;
+  Iterable<Facture> build() {
+    ref.watch(listFacturesProvider);
+    return sortedFactures;
+  }
+
   int minimunPrice = 0;
 
   void filterFacture() {
-    //print(ref.read(listFacturesProvider));
-    state = ref
-        .watch(listFacturesProvider)
-        .toList()
-        .deleteWhere((facture) => facture.prix < minimunPrice);
+    state = ref.watch(listFacturesProvider);
+    print(state);
+    state =
+        state.toList().deleteWhere((facture) => facture.prix < minimunPrice);
   }
 
   void refreshMinimumPrice(String value) {

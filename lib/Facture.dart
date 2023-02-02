@@ -1,6 +1,8 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 part 'Facture.freezed.dart';
 
+typedef Factures = Iterable<Facture>;
+
 @freezed
 class Facture with _$Facture {
   factory Facture({

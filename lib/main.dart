@@ -76,9 +76,10 @@ class MyHomePage extends ConsumerWidget {
                 Row(children: [
                   FloatingActionButton(
                     heroTag: "btn1",
-                    onPressed: () => facturesRead.add(
-                        facturesRead.factureFactory(facturesRead.nextId(),
-                            Util.randomClient(), Util.randomPrix())),
+                    onPressed: () => facturesRead.add(facturesRead.factory(
+                        facturesRead.nextId(),
+                        Util.randomClient(),
+                        Util.randomPrix())),
                     child: const Icon(Icons.add),
                   ),
                   const SizedBox(
@@ -97,7 +98,8 @@ class MyHomePage extends ConsumerWidget {
                   ),
                 ]),
                 Column(
-                  children: filterWatch
+                  children: ref
+                      .watch(filterFacturesProvider)
                       .map((e) =>
                           FactureCard(facture: e, facturesRead: facturesRead))
                       .toList(),
