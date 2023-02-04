@@ -17,10 +17,10 @@ class FilterFactures extends _$FilterFactures {
   int minimunPrice = 0;
 
   void filterFacture() {
-    state = ref.watch(listFacturesProvider);
-    print(state);
-    state =
-        state.toList().deleteWhere((facture) => facture.prix < minimunPrice);
+    state = ref
+        .watch(listFacturesProvider)
+        .toList(growable: true)
+        .deleteWhere((facture) => facture.prix < minimunPrice);
   }
 
   void refreshMinimumPrice(String value) {

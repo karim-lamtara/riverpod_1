@@ -1,3 +1,5 @@
+import 'dart:core';
+
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:riverpod_1/FilterFactures.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -10,14 +12,16 @@ int _lastIndexUsed = 0;
 
 @riverpod
 class ListFactures extends _$ListFactures {
-  int nextId() => _lastIndexUsed + 1;
-  final initialFactures = const Iterable<Facture>.empty();
+  ListFactures(
+      [Iterable<Facture> this.param = const Iterable<Facture>.empty()]);
+  final param;
+  int get nextId => _lastIndexUsed + 1;
+
   @override
-  Iterable<Facture> build() => initialFactures;
+  Iterable<Facture> build() => param;
 
   void add(Facture facture) {
     state = [...state, facture];
-    print(state);
     ref.read(filterFacturesProvider.notifier).filterFacture();
   }
 
@@ -28,7 +32,7 @@ class ListFactures extends _$ListFactures {
     ref.read(filterFacturesProvider.notifier).filterFacture();
   }
 
-  Facture factory(int idx, String nom, int prix) {
+  Facture randomFactory(int idx, String nom, int prix) {
     Facture facture = Facture(id: 'FCT-$idx', nomClient: nom, prix: prix);
     _lastIndexUsed++;
     return facture;
