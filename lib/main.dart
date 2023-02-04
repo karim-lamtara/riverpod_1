@@ -1,3 +1,5 @@
+// ignore_for_file: library_private_types_in_public_api
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -20,35 +22,32 @@ class MyApp extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
+  build(_) {
     return MaterialApp(
       title: 'Facture exo',
       theme: ThemeData(
         useMaterial3: true,
-        colorScheme:
-            ColorScheme.fromSeed(seedColor: Color.fromARGB(255, 153, 187, 246)),
+        colorScheme: ColorScheme.fromSeed(
+            seedColor: const Color.fromARGB(255, 153, 187, 246)),
       ),
       home: const MyHomePage(),
-      // routes: {
-      //   'facture': (context) => const FactureScreen(),
-      // },
     );
   }
 }
 
+/// Display [Facture]
 class FactureScreen extends ConsumerWidget {
   const FactureScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final theme = Theme.of(context);
+  build(context, ref) {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
         title: const Text('Facture exo SCUB'),
-        backgroundColor: theme.colorScheme.primary,
+        backgroundColor: Theme.of(context).colorScheme.primary,
       ),
-      body: Text("To do...."),
+      body: const Text("To do...."),
     );
   }
 }
@@ -77,27 +76,24 @@ class MyHomePage extends ConsumerWidget {
                   FloatingActionButton(
                     heroTag: "btn1",
                     onPressed: () => facturesRead.add(
-                        facturesRead.factureFactory(facturesRead.nextId(),
+                        facturesRead.randomFactory(facturesRead.nextId,
                             Util.randomClient(), Util.randomPrix())),
                     child: const Icon(Icons.add),
                   ),
-                  const SizedBox(
-                    width: 100,
-                  ),
+                  const SizedBox(width: 100),
                   SizedBox(
                     width: 20.0,
                     child: TextField(
                       maxLines: 1,
                       maxLength: 5,
                       keyboardType: TextInputType.number,
-                      onChanged: (String value) {
-                        filterRead.refreshMinimumPrice(value);
-                      },
+                      onChanged: (v) => filterRead.refreshMinimumPrice(v),
                     ),
                   ),
                 ]),
                 Column(
-                  children: filterWatch
+                  children: ref
+                      .watch(filterFacturesProvider)
                       .map((e) =>
                           FactureCard(facture: e, facturesRead: facturesRead))
                       .toList(),
@@ -112,13 +108,14 @@ class FactureCard extends StatefulWidget {
 
   final Facture facture;
   final ListFactures facturesRead;
-  bool isFactureSelected = false;
 
   @override
   _FactureCard createState() => _FactureCard();
 }
 
 class _FactureCard extends State<FactureCard> {
+  bool isFactureSelected = false;
+
   @override
   build(context) {
     final theme = Theme.of(context);
@@ -129,7 +126,7 @@ class _FactureCard extends State<FactureCard> {
     return Padding(
         padding: const EdgeInsets.all(0),
         child: Card(
-            color: Color.fromARGB(255, 163, 201, 232),
+            color: const Color.fromARGB(255, 163, 201, 232),
             child: Column(children: [
               Row(mainAxisAlignment: MainAxisAlignment.center, children: [
                 InkWell(
@@ -143,8 +140,7 @@ class _FactureCard extends State<FactureCard> {
                       ),
                     ),
                     onTap: () {
-                      setState(() =>
-                          widget.isFactureSelected = !widget.isFactureSelected);
+                      setState(() => isFactureSelected = !isFactureSelected);
                     }),
                 FloatingActionButton(
                   heroTag: widget.facture.id,
@@ -154,7 +150,7 @@ class _FactureCard extends State<FactureCard> {
                   child: const Icon(Icons.delete),
                 ),
               ]),
-              if (widget.isFactureSelected)
+              if (isFactureSelected)
                 Card(child: DetailsFacture(facture: widget.facture))
             ])));
   }
@@ -165,25 +161,28 @@ class DetailsFacture extends StatelessWidget {
   final Facture facture;
   @override
   Widget build(BuildContext context) {
-    return Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-      Column(children: [const Text("Id_facture"), Text(facture.id)]),
-      SizedBox(width: 20),
-      Column(children: [
-        const Text("Nom_Client"),
-        InkWell(
-            child: Container(
-              alignment: Alignment.center,
-              child: Text(facture.nomClient),
-            ),
-            onTap: () {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => const FactureScreen()));
-            })
-      ]),
-      SizedBox(width: 20),
-      Column(children: [const Text("Prix_facture"), Text('${facture.prix}')]),
-    ]);
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Column(children: [const Text("Id_facture"), Text(facture.id)]),
+        const SizedBox(width: 20),
+        Column(children: [
+          const Text("Nom_Client"),
+          InkWell(
+              child: Container(
+                alignment: Alignment.center,
+                child: Text(facture.nomClient),
+              ),
+              onTap: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const FactureScreen()));
+              })
+        ]),
+        const SizedBox(width: 20),
+        Column(children: [const Text("Prix_facture"), Text('${facture.prix}')]),
+      ],
+    );
   }
 }
