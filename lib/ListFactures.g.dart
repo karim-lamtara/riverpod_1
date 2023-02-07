@@ -29,7 +29,7 @@ class _SystemHash {
   }
 }
 
-String _$ListFacturesHash() => r'4e2141ca777f1f5fd24c1c2bcf50402a0b63f52a';
+String _$ListFacturesHash() => r'f7c565d7e3329a11b39316f0ecab9a1a0081a983';
 
 /// See also [ListFactures].
 final listFacturesProvider =

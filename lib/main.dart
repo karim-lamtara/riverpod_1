@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_1/ListFactures.dart';
+import 'package:riverpod_1/isFactureSelected.dart';
 
 import 'Facture.dart';
 import 'FilterFactures.dart';
@@ -103,26 +104,19 @@ class MyHomePage extends ConsumerWidget {
   }
 }
 
-class FactureCard extends StatefulWidget {
+class FactureCard extends ConsumerWidget {
   FactureCard({super.key, required this.facture, required this.facturesRead});
 
   final Facture facture;
   final ListFactures facturesRead;
 
   @override
-  _FactureCard createState() => _FactureCard();
-}
-
-class _FactureCard extends State<FactureCard> {
-  bool isFactureSelected = false;
-
-  @override
-  build(context) {
+  build(context, ref) {
     final theme = Theme.of(context);
     final style = theme.textTheme.displayLarge!.copyWith(
       color: theme.colorScheme.onPrimary,
     );
-    final String nomClient = super.widget.facture.nomClient;
+    final String nomClient = facture.nomClient;
     return Padding(
         padding: const EdgeInsets.all(0),
         child: Card(
@@ -139,19 +133,22 @@ class _FactureCard extends State<FactureCard> {
                         textDirection: TextDirection.ltr,
                       ),
                     ),
-                    onTap: () {
-                      setState(() => isFactureSelected = !isFactureSelected);
-                    }),
+                    onTap: () =>
+                        ref
+                                .read(isFactureSelectedProvider(facture.id)
+                                    .notifier)
+                                .state =
+                            !ref.read(isFactureSelectedProvider(facture.id))),
                 FloatingActionButton(
-                  heroTag: widget.facture.id,
+                  heroTag: facture.id,
                   onPressed: () {
-                    widget.facturesRead.remove(widget.facture.id);
+                    facturesRead.remove(facture.id);
                   },
                   child: const Icon(Icons.delete),
                 ),
               ]),
-              if (isFactureSelected)
-                Card(child: DetailsFacture(facture: widget.facture))
+              if (ref.watch(isFactureSelectedProvider(facture.id)))
+                Card(child: DetailsFacture(facture: facture))
             ])));
   }
 }
