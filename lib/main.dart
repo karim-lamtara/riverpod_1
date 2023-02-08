@@ -1,8 +1,6 @@
 // ignore_for_file: library_private_types_in_public_api
 
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_1/ListFactures.dart';
 import 'package:riverpod_1/isFactureSelected.dart';
@@ -11,30 +9,11 @@ import 'Facture.dart';
 import 'FilterFactures.dart';
 import 'Util.dart';
 
-void main() {
-  runApp(
-    const ProviderScope(child: MyApp()),
-  );
-}
-
-class MyApp extends StatelessWidget {
-  const MyApp({
-    super.key,
-  });
-
-  @override
-  build(_) {
-    return MaterialApp(
-      title: 'Facture exo',
-      theme: ThemeData(
-        useMaterial3: true,
-        colorScheme: ColorScheme.fromSeed(
-            seedColor: const Color.fromARGB(255, 153, 187, 246)),
-      ),
-      home: const MyHomePage(),
-    );
-  }
-}
+void main() => runApp(MaterialApp(
+    theme: ThemeData.dark(useMaterial3: true).copyWith(
+        backgroundColor: const Color(0xff031d36),
+        scaffoldBackgroundColor: const Color(0xff031d36)),
+    home: const Scaffold(body: ProviderScope(child: MyHomePage()))));
 
 /// Display [Facture]
 class FactureScreen extends ConsumerWidget {
@@ -59,8 +38,6 @@ class MyHomePage extends ConsumerWidget {
   @override
   build(context, ref) {
     final theme = Theme.of(context);
-
-    final filterWatch = ref.watch(filterFacturesProvider);
     final facturesRead = ref.read(listFacturesProvider.notifier);
     final filterRead = ref.read(filterFacturesProvider.notifier);
     return Scaffold(
@@ -95,8 +72,8 @@ class MyHomePage extends ConsumerWidget {
                 Column(
                   children: ref
                       .watch(filterFacturesProvider)
-                      .map((e) =>
-                          FactureCard(facture: e, facturesRead: facturesRead))
+                      .map((e) => FactureCard(
+                          facture: e, facturesRead: facturesRead, ref: ref))
                       .toList(),
                 )
               ])),
@@ -104,14 +81,18 @@ class MyHomePage extends ConsumerWidget {
   }
 }
 
-class FactureCard extends ConsumerWidget {
-  FactureCard({super.key, required this.facture, required this.facturesRead});
+class FactureCard extends StatelessWidget {
+  const FactureCard(
+      {super.key,
+      required this.facture,
+      required this.facturesRead,
+      required this.ref});
 
   final Facture facture;
   final ListFactures facturesRead;
-
+  final WidgetRef ref;
   @override
-  build(context, ref) {
+  build(context) {
     final theme = Theme.of(context);
     final style = theme.textTheme.displayLarge!.copyWith(
       color: theme.colorScheme.onPrimary,
